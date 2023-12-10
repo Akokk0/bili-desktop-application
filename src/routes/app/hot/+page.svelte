@@ -1,0 +1,1 @@
+<div>Hot Page</div>
