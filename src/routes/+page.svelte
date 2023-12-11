@@ -34,16 +34,21 @@
 
 	// Get QRCode
 	const getQRCode = async () => {
+		// Check whether the timer exists before,if it exists, remove the previous timer
+		checkLoginStatusTimer && clearInterval(checkLoginStatusTimer)
+		// Get login QRCode
 		const resp = await invoke('request', {
 			url: 'https://passport.bilibili.com/x/passport-login/web/qrcode/generate',
 			reqType: 'GET'
 		});
+		// Parse the content into JSON object
 		const respObj = JSON.parse(resp);
 		// console.log(respObj);
-
+		// Set various values
 		qrcodeUrl = respObj.data.url;
 		qrcodeKey = respObj.data.qrcode_key;
 		qrcodeUrl && (await QRCode.toCanvas(canvas, qrcodeUrl));
+		// Set timer to check if login is successful
 		checkLoginStatusTimer = setInterval(getLoginStatus, 500);
 	};
 
@@ -54,18 +59,40 @@
 			reqType: 'GET'
 		});
 		const respObj = JSON.parse(resp);
+
+		console.log(respObj);
+
 		qrcodeState = respObj.data.message;
 		// if respObj.data.code === 0, it's means login in success
-		if (respObj.data.code === 0) {
-			await invoke('save_cookies');
-			goto('/app');
+		switch (respObj.data.code) {
+			case 86038: {
+				// QRCode invalid
+				// Clear url and key
+				qrcodeUrl = '';
+				qrcodeKey = '';
+			}
+			case 0: {
+				// Login success
+				// Save refresh_token to disk
+				respObj.data.refresh_token;
+				try {
+					// Save cookies to disk
+					await invoke('save_cookies');
+					// Save refresh_token to disk
+					await invoke('save_refresh_token', { refreshToken: respObj.data.refresh_token });
+				} catch (e) {
+					alert('出现了一些问题，请重新扫码登录！');
+				}
+				// Jump to App home page
+				goto('/app');
+			}
 		}
 	};
 
 	// Check cookies staus
 	const checkCookiesStatus = async () => {
-		await invoke('check_cookies_status')
-	}
+		await invoke('check_cookies_status');
+	};
 </script>
 
 <div class="flex flex-col items-center justify-center h-screen">

@@ -6,8 +6,8 @@
 
 	// Logout
 	const logout = async () => {
-		await invoke('logout')
-		goto('/')
+		await invoke('logout');
+		goto('/');
 	};
 </script>
 
@@ -84,33 +84,16 @@
 					>
 				</a>
 			</li>
-			<li>
-				<a href="/">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-5 w-5"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-						/></svg
-					>
-				</a>
-			</li>
-			<li>
-				<button on:click={logout} class="btn btn-primary">Back</button>
-			</li>
+			<button class="btn btn-primary" on:click={logout}>Logout</button>
 		</ul>
 		<!-- Avatar -->
-		<img
-			class="absolute bottom-0 left-0 h-16 w-16 rounded-full mb-4 ml-5"
-			src={avatar}
-			alt="Avatar"
-		/>
+		<a class="absolute bottom-0 left-0" href="/app/personal">
+			<img
+				class="h-16 w-16 rounded-full mb-4 ml-5"
+				src={avatar}
+				alt="Avatar"
+			/>
+		</a>
 	</div>
 	<div class="divider divider-horizontal">Or</div>
 	<div class="grid h- flex-grow card bg-base-300 rounded-box place-items-center">
